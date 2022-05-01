@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.purple,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: const Home(),
@@ -80,8 +80,38 @@ class _HomeState extends State<Home> {
                       child: Padding(
                         padding: const EdgeInsets.all(8),
                         child: SwipeableStack<CardData>(
-                          stackClipBehaviour: Clip.none,
                           controller: _controller,
+                          onWillMoveNext: (data, direction) {
+                            final allowedDirection = [
+                              SwipeDirection.right,
+                              SwipeDirection.left
+                            ];
+                            return allowedDirection.contains(direction);
+                          },
+                          onSwipeCompleted: (data, direction) {
+                            // 対象のカードで使用しているデータを使用することができます。
+                            final targetUserId = data.id;
+                            final targetUser = data.path;
+                            // スワイプ方向それぞれに処理を記述します。
+                            switch (direction) {
+                              case SwipeDirection.left:
+                                print('左にスワイプされました: ${targetUserId}');
+                                _controller.rewind;
+                                print('処理終わり');
+                                // TODO: 左方向にスワイプした場合の処理
+                                break;
+                              case SwipeDirection.right:
+                                // TODO: 右方向にスワイプした場合の処理
+                                break;
+                              case SwipeDirection.up:
+                                // TODO: 上方向にスワイプした場合の処理
+                                break;
+                              case SwipeDirection.down:
+                                // TODO: 下方向にスワイプした場合の処理
+                                break;
+                            }
+                          },
+                          stackClipBehaviour: Clip.none,
                           dataSet: _cards,
                           overlayBuilder: (
                             context,
@@ -190,24 +220,10 @@ class _HomeState extends State<Home> {
                         ),
                         _button(
                           onPressed: () => _controller.next(
-                            swipeDirection: SwipeDirection.down,
-                          ),
-                          color: Colors.red,
-                          label: 'down',
-                        ),
-                        _button(
-                          onPressed: () => _controller.next(
                             swipeDirection: SwipeDirection.left,
                           ),
                           color: Colors.red,
                           label: 'left',
-                        ),
-                        _button(
-                          onPressed: () => _controller.next(
-                            swipeDirection: SwipeDirection.up,
-                          ),
-                          color: Colors.red,
-                          label: 'up',
                         ),
                         _button(
                           onPressed: () => _controller.next(
